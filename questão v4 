@@ -1,0 +1,97 @@
+#include <stdio.h>
+#include <string.h>
+
+// Constantes para representar as posições dos jogadores
+enum Posicao {
+    GOLEIRO,
+    LATERAL,
+    ZAGUEIRO,
+    VOLANTE,
+    MEIO_CAMPO,
+    ATACANTE
+};
+
+struct Jogador {
+    char nome[100];
+    enum Posicao posicao;
+    int forca;
+};
+
+void lerTime(struct Jogador time[11]) {
+    for (int i = 0; i < 11; i++) {
+        scanf("%s", time[i].nome);
+        char posicaoStr[20];
+        scanf(" %s", posicaoStr);
+        if (strcmp(posicaoStr, "G") == 0) {
+            time[i].posicao = GOLEIRO;
+        } else if (strcmp(posicaoStr, "L") == 0) {
+            time[i].posicao = LATERAL;
+        } // Adicione mais casos para as posições restantes
+        scanf("%d", &time[i].forca);
+    }
+}
+
+float calcular_forca(struct Jogador time[11]) {
+    float forca = 0;
+
+    for (int i = 0; i < 11; i++) {
+        int forca_jogador = time[i].forca;
+
+        // Ponderação de acordo com a posição
+        switch (time[i].posicao) {
+            case GOLEIRO:
+                forca += 8 * forca_jogador;
+                break;
+            case LATERAL:
+                forca += 10 * forca_jogador;
+                break;
+            case ZAGUEIRO:
+                forca += 5 * forca_jogador;
+                break;
+            case VOLANTE:
+                forca += 8 * forca_jogador;
+                break;
+            case MEIO_CAMPO:
+                forca += 11 * forca_jogador;
+                break;
+            case ATACANTE:
+                forca += 12 * forca_jogador;
+                break;
+        }
+    }
+
+    return forca / 100;
+}
+
+int main() {
+    struct Jogador time1[11];
+    struct Jogador time2[11];
+    char nome_time1[100];
+    char nome_time2[100];
+
+    // Ler a entrada para os dois times
+    scanf("%s", nome_time1);
+    lerTime(time1);
+
+    scanf("%s", nome_time2);
+    lerTime(time2);
+
+    // Calcular a força ponderada de cada time
+    float forca_time1 = calcular_forca(time1);
+    float forca_time2 = calcular_forca(time2);
+
+    // Mostrar a força ponderada de cada time com 2 casas decimais
+    printf("%s: %.2f\n", nome_time1, forca_time1);
+    printf("%s: %.2f\n", nome_time2, forca_time2);
+
+    // Determinar qual time é o mais forte
+    if (forca_time1 > forca_time2) {
+        printf("%s é o time mais forte.\n", nome_time1);
+    } else if (forca_time2 > forca_time1) {
+        printf("%s é o time mais forte.\n", nome_time2);
+    } else {
+        printf("Os times têm a mesma força.\n");
+    }
+
+    return 0;
+}
